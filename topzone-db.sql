@@ -55,33 +55,15 @@ CREATE TABLE products (
     discount NUMERIC(5,2) DEFAULT 0
         CHECK (discount >= 0 AND discount <= 100),
 
+	size VARCHAR(50) NOT NULL,
+    color VARCHAR(50) NOT NULL,
+
     is_active BOOLEAN DEFAULT TRUE,
     is_archive BOOLEAN DEFAULT FALSE,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE product_variants (
-    id SERIAL PRIMARY KEY,
-
-    product_id INT NOT NULL
-        REFERENCES products(id)
-        ON DELETE CASCADE,
-
-    size VARCHAR(50) NOT NULL,
-    color VARCHAR(50) NOT NULL,
-
-    price NUMERIC(12,2),
-
-    is_active BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    UNIQUE (product_id, size, color)
-);
-
 
 CREATE TABLE product_images (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
