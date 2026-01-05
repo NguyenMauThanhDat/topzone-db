@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
@@ -20,7 +20,7 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(150) UNIQUE NOT NULL,
     description TEXT,
@@ -29,7 +29,7 @@ CREATE TABLE categories (
 );
 
 CREATE TABLE images (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     origin_name VARCHAR(255) NOT NULL,
     stored_name VARCHAR(255) NOT NULL,
     mime_type VARCHAR(100) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE images (
 );
 
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
 
     category_id INT 
         REFERENCES categories(id) 
@@ -68,20 +68,18 @@ CREATE TABLE products (
 CREATE TABLE product_images (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
 
-    product_id INT NOT NULL
+    product_id UUID NOT NULL
         REFERENCES products(id)
         ON DELETE CASCADE,
 
-    image_id INT NOT NULL
+    image_id UUID NOT NULL
         REFERENCES images(id)
         ON DELETE CASCADE,
 
     is_primary BOOLEAN DEFAULT FALSE,
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-
-    CONSTRAINT uq_product_image UNIQUE (product_id, image_id)
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 
