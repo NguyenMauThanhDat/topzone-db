@@ -84,6 +84,8 @@ CREATE TABLE product_variants (
 
 
 CREATE TABLE product_images (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+
     product_id INT NOT NULL
         REFERENCES products(id)
         ON DELETE CASCADE,
@@ -94,10 +96,10 @@ CREATE TABLE product_images (
 
     is_primary BOOLEAN DEFAULT FALSE,
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-    PRIMARY KEY (product_id, image_id)
+    CONSTRAINT uq_product_image UNIQUE (product_id, image_id)
 );
 
 
