@@ -4,6 +4,9 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
+	role_id INT NOT NULL
+        REFERENCES roles(id),
+        
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -14,18 +17,6 @@ CREATE TABLE roles (
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE user_roles (
-    user_id INT NOT NULL
-        REFERENCES users(id)
-        ON DELETE CASCADE,
-
-    role_id INT NOT NULL
-        REFERENCES roles(id)
-        ON DELETE CASCADE,
-
-    PRIMARY KEY (user_id, role_id)
 );
 
 CREATE TABLE categories (
