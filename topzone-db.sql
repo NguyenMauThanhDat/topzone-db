@@ -1,22 +1,22 @@
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    full_name VARCHAR(255) NOT NULL,
-    phone VARCHAR(20),
-	role_id INT NOT NULL
-        REFERENCES roles(id),
-        
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE roles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+	role_id UUID NOT NULL
+        REFERENCES roles(id),
+        
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE categories (
@@ -35,7 +35,7 @@ CREATE TABLE images (
     mime_type VARCHAR(100) NOT NULL,
     image_size BIGINT NOT NULL,
     image_url TEXT NOT NULL,
-    uploaded_by INT REFERENCES users(id) ON DELETE SET NULL,
+    uploaded_by UUID REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -43,7 +43,7 @@ CREATE TABLE images (
 CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
 
-    category_id INT 
+    category_id UUID 
         REFERENCES categories(id) 
         ON DELETE SET NULL,
 
@@ -81,5 +81,4 @@ CREATE TABLE product_images (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-
 
