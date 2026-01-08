@@ -24,6 +24,29 @@ CREATE TABLE users (
 	email_verified BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE refresh_tokens (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+
+    user_id UUID NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    token TEXT NOT NULL UNIQUE,
+
+    auth_provider VARCHAR(50),
+
+    user_agent TEXT,
+    ip_address INET,
+
+    is_revoked BOOLEAN DEFAULT FALSE,
+
+    expires_at TIMESTAMPTZ NOT NULL,
+
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     name VARCHAR(100) NOT NULL,
