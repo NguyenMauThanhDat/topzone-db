@@ -9,14 +9,19 @@ CREATE TABLE roles (
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255),
     full_name VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
 	role_id UUID NOT NULL
         REFERENCES roles(id),
         
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+	auth_provider VARCHAR(50) NOT NULL,
+	google_id VARCHAR(255) UNIQUE,
+	avatar_url TEXT,
+	email_verified BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE categories (
