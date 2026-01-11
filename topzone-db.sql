@@ -58,6 +58,7 @@ CREATE TABLE images (
 
 CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
+	product_code VARCHAR(100) UNIQUE NOT NULL,
     category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
@@ -72,6 +73,7 @@ CREATE TABLE products (
 
 CREATE TABLE product_variants (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
+	sku VARCHAR(150) UNIQUE NOT NULL,
     product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     size VARCHAR(50) NOT NULL,
     color VARCHAR(50) NOT NULL,
