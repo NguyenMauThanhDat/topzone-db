@@ -12,9 +12,7 @@ CREATE TABLE users (
     password_hash VARCHAR(255),
     full_name VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
-	role_id UUID NOT NULL
-        REFERENCES roles(id),
-
+	role_id UUID NOT NULL REFERENCES roles(id),
 	auth_provider VARCHAR(50) NOT NULL,
 	google_id VARCHAR(255) UNIQUE,
 	avatar_url TEXT,
@@ -25,22 +23,13 @@ CREATE TABLE users (
 
 CREATE TABLE refresh_tokens (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
-
-    user_id UUID NOT NULL
-        REFERENCES users(id)
-        ON DELETE CASCADE,
-
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     token TEXT NOT NULL UNIQUE,
-
     auth_provider VARCHAR(50),
-
     user_agent TEXT,
     ip_address INET,
-
     is_revoked BOOLEAN DEFAULT FALSE,
-
     expires_at TIMESTAMPTZ NOT NULL,
-
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
@@ -69,59 +58,35 @@ CREATE TABLE images (
 
 CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
-
-    category_id UUID 
-        REFERENCES categories(id) 
-        ON DELETE SET NULL,
-
+    category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     price NUMERIC(12,2) NOT NULL,
-
-    discount NUMERIC(5,2) DEFAULT 0
-        CHECK (discount >= 0 AND discount <= 100),
-
+    discount NUMERIC(5,2) DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     is_archive BOOLEAN DEFAULT FALSE,
-
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 CREATE TABLE product_variants (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
-
-    product_id UUID NOT NULL
-        REFERENCES products(id)
-        ON DELETE CASCADE,
-
+    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     size VARCHAR(50) NOT NULL,
     color VARCHAR(50) NOT NULL,
-
     variant_price NUMERIC(12,2),
-
     is_active BOOLEAN DEFAULT TRUE,
-
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-
     UNIQUE (product_id, size, color)
 );
 
 CREATE TABLE product_images (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
-
-    product_id UUID NOT NULL
-        REFERENCES products(id)
-        ON DELETE CASCADE,
-
-    image_id UUID NOT NULL
-        REFERENCES images(id)
-        ON DELETE CASCADE,
-
+    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    image_id UUID NOT NULL REFERENCES images(id) ON DELETE CASCADE,
     is_primary BOOLEAN DEFAULT FALSE,
-
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() NOT NULL
 );
