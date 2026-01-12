@@ -75,14 +75,36 @@ CREATE TABLE product_variants (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
 	sku VARCHAR(150) UNIQUE NOT NULL,
     product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-    size VARCHAR(50) NOT NULL,
-    color VARCHAR(50) NOT NULL,
     variant_price NUMERIC(12,2),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     UNIQUE (product_id, size, color)
 );
+
+CREATE TABLE attributes (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    code VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    data_type VARCHAR(20) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE attribute_values (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    attribute_id UUID NOT NULL REFERENCES attributes(id) ON DELETE CASCADE,
+    value_text TEXT,
+    value_number NUMERIC,
+    value_boolean BOOLEAN
+);
+
+CREATE TABLE variant_attributes (
+    variant_id UUID NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
+    attribute_id UUID NOT NULL REFERENCES attributes(id) ON DELETE CASCADE,
+    attribute_value_id UUID NOT NULL REFERENCES attribute_values(id) ON DELETE CASCADE,
+    PRIMARY KEY (variant_id, attribute_id)
+);
+
 
 CREATE TABLE product_images (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
