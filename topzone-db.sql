@@ -2,8 +2,8 @@ CREATE TABLE roles (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-	updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE users (
@@ -17,8 +17,8 @@ CREATE TABLE users (
 	google_id VARCHAR(255) UNIQUE,
 	avatar_url TEXT,
 	email_verified BOOLEAN DEFAULT FALSE,
-	created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE refresh_tokens (
@@ -30,8 +30,8 @@ CREATE TABLE refresh_tokens (
     ip_address INET,
     is_revoked BOOLEAN DEFAULT FALSE,
     expires_at TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 
@@ -40,8 +40,8 @@ CREATE TABLE categories (
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(150) UNIQUE NOT NULL,
     description TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE images (
@@ -52,8 +52,8 @@ CREATE TABLE images (
     image_size BIGINT NOT NULL,
     image_url TEXT NOT NULL,
     uploaded_by UUID REFERENCES users(id) ON DELETE SET NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE products (
@@ -67,8 +67,8 @@ CREATE TABLE products (
     discount NUMERIC(5,2) DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     is_archive BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE product_variants (
@@ -77,8 +77,8 @@ CREATE TABLE product_variants (
     product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     variant_price NUMERIC(12,2),
     is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (product_id, size, color)
 );
 
@@ -111,8 +111,8 @@ CREATE TABLE product_images (
     product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     image_id UUID NOT NULL REFERENCES images(id) ON DELETE CASCADE,
     is_primary BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 
