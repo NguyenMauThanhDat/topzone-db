@@ -39,6 +39,7 @@ CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(150) UNIQUE NOT NULL,
+	parent_id UUID REFERENCES categories(id),
     description TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -78,8 +79,8 @@ CREATE TABLE product_variants (
     variant_price NUMERIC(12,2),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (product_id, size, color)
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+	
 );
 
 CREATE TABLE attributes (
@@ -87,7 +88,8 @@ CREATE TABLE attributes (
     code VARCHAR(100) UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
     data_type VARCHAR(20) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE attribute_values (
@@ -95,7 +97,9 @@ CREATE TABLE attribute_values (
     attribute_id UUID NOT NULL REFERENCES attributes(id) ON DELETE CASCADE,
     value_text TEXT,
     value_number NUMERIC,
-    value_boolean BOOLEAN
+    value_boolean BOOLEAN,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE variant_attributes (
@@ -114,5 +118,24 @@ CREATE TABLE product_images (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE INDEX idx_users_role_id ON users(role_id);
+
+CREATE INDEX idx_users_google_login ON users(auth_provider, google_id);
+
+CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id);
+
+CREATE INDEX idx_refresh_tokens_expires_at ON refresh_tokens(expires_at);
+
+CREATE INDEX idx_categories_parent_id ON categories(parent_id);
+
+CREATE INDEX idx_products_category_id ON products(category_id);
+
+CREATE INDEX idx_variants_product_id ON product_variants(product_id);
+
+CREATE INDEX idx_variant_attributes_attribute ON variant_attributes(attribute_id);
+
+CREATE UNIQUE INDEX ux_product_primary_image ON product_images(product_id) WHERE is_primary = TRUE;
+
 
 
