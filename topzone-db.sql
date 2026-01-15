@@ -103,12 +103,14 @@ CREATE TABLE attribute_values (
 );
 
 CREATE TABLE variant_attributes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
     variant_id UUID NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
     attribute_id UUID NOT NULL REFERENCES attributes(id) ON DELETE CASCADE,
     attribute_value_id UUID NOT NULL REFERENCES attribute_values(id) ON DELETE CASCADE,
-    PRIMARY KEY (variant_id, attribute_id)
-);
 
+    UNIQUE (variant_id, attribute_id)
+);
 
 CREATE TABLE product_images (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
